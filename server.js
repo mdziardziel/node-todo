@@ -37,7 +37,7 @@ app.use(cors());
 app.get("/api/todos", function(req, res) {
   // use mongoose to get all todos in the database
   let filter = {}
-  if(req.query.done != undefined) {
+  if(req.query.done == 'true' || req.query.done == 'false') {
     filter = {
       done: req.query.done
     }
@@ -91,6 +91,25 @@ app.delete("/api/todos/:todo_id", function(req, res) {
   Todo.remove(
     {
       _id: req.params.todo_id
+    },
+    function(err, todo) {
+      if (err) res.send(err);
+
+      // get and return all the todos after you create another
+      Todo.find(function(err, todos) {
+        if (err) res.send(err);
+        res.json(todos);
+      });
+    }
+  );
+});
+
+app.put("/api/todos/:todo_id", function(req, res) {
+  Todo.update(
+    {
+      _id: req.params.todo_id
+    }, {
+      done: req.body.done
     },
     function(err, todo) {
       if (err) res.send(err);
