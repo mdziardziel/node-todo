@@ -1,0 +1,27 @@
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Checked?</th>
+      <th scope="col">Description</th>
+      <th scope="col"></th>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <!-- LOOP OVER THE TODOS IN $scope.todos -->
+    <tr ng-repeat="todo in todos">
+      <td>
+        <input type="checkbox" ng-click="checkTodo(todo)" ng-model="todo.done" class='form-check-input'>
+      </td>
+      <td>
+        <input class="form-control" rows="3" ng-model="todo.text">
+      </td>
+      <td>
+        <button ng-click="updateTodo(todo)" class='btn btn-primary'>Update</button>
+      </td>
+      <td>
+        <button ng-click="deleteTodo(todo._id)" class='btn btn-danger'>Delete</button>
+      </td>
+    </tr>
+  </tbody>
+</table>

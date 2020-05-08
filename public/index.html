@@ -35,8 +35,9 @@
 
   <!-- SPELLS -->
   <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script><!-- load jquery -->
-  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script><!-- load angular -->
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.0/angular.min.js"></script>
   <script src="core.js"></script>
+
 </head>
 <!-- SET THE CONTROLLER AND GET ALL TODOS WITH INITIALIZE FUNCTION -->
 
@@ -45,21 +46,22 @@
 
     <!-- HEADER AND TODO COUNT -->
     <div class="jumbotron text-center">
-      <h1>Number of {{ cos }} TODOs <span class="label label-info">{{ todos.length }}</span></h1>
+      <h1 ng-if='tab != "new"'>Number of {{ tab }} TODOs <span class="label label-info">{{ todosNumber.number }}</span></h1>
+      <h1 ng-if='tab == "new"'>Create new TODO</h1>
     </div>
 
     <ul class="nav nav-tabs" id="myTab" role="tablist">
       <li class="nav-item">
-        <a class="nav-link active" id="home-tab" data-toggle="tab" href="#new" role="tab" aria-controls="home" aria-selected="true">New</a>
+        <a class="nav-link active" ng-click='tab = "new"' id="home-tab" data-toggle="tab" href="#new" role="tab" aria-controls="home" aria-selected="true">New</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" ng-click='getAllTodos()' id="all-tab" data-toggle="tab" href="#all" role="tab" aria-controls="all" aria-selected="false">All</a>
+        <a class="nav-link" ng-click='forceReload1 = !forceReload1; tab = "all"' id="all-tab" data-toggle="tab" href="#all" role="tab" aria-controls="all" aria-selected="false">All</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" ng-click='getDoneTodos()' id="done-tab" data-toggle="tab" href="#done" role="tab" aria-controls="done" aria-selected="false">Done</a>
+        <a class="nav-link" ng-click='forceReload2 = !forceReload2; tab = "done"' id="done-tab" data-toggle="tab" href="#done" role="tab" aria-controls="done" aria-selected="false">Done</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" ng-click='getNotDoneTodos()' id="not-done-tab" data-toggle="tab" href="#not-done" role="tab" aria-controls="not-done" aria-selected="false">Not Done</a>
+        <a class="nav-link" ng-click='forceReload3 = !forceReload3; tab = "not done"' id="not-done-tab" data-toggle="tab" href="#not-done" role="tab" aria-controls="not-done" aria-selected="false">Not Done</a>
       </li>
     </ul>
     <div class="tab-content" id="myTabContent">
@@ -74,8 +76,7 @@
                 <!-- BIND THIS VALUE TO formData.text IN ANGULAR -->
                 <div class="form-group">
                   <label for="exampleFormControlTextarea1">Add new TODO</label>
-                  <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="co jeszcze chcesz zrobić?"
-                  ng-model="formData.text"></textarea>
+                  <input class="form-control" rows="3" placeholder="co jeszcze chcesz zrobić?" ng-model="formData.text"/>
                 </div>
     
               <!-- createToDo() WILL CREATE NEW TODOS -->
@@ -84,90 +85,16 @@
           </div>
         </div>
       </div>
-
       <div class="tab-pane fade" id="all" role="tabpanel" aria-labelledby="all-tab">
-        <!-- TODO LIST -->
-        <table class="table">
-          <thead>
-            <tr>
-              <th scope="col">Checked?</th>
-              <th scope="col">Description</th>
-              <th scope="col"></th>
-            </tr>
-          </thead>
-          <tbody>
-            <!-- LOOP OVER THE TODOS IN $scope.todos -->
-            <tr ng-repeat="todo in todos">
-              <td>
-                <input type="checkbox" ng-click="updateTodo(todo)" ng-model="todo.done" class='form-check-input'>
-              </td>
-              <td>
-                {{ todo.text }}
-              </td>
-              <td>
-                <button ng-click="deleteTodo(todo._id)" class='btn btn-danger'>Delete</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-
+        <todo-list done-filter='' force-reload='forceReload1' todos-number='todosNumber'></todo-list>
       </div>
       <div class="tab-pane fade" id="done" role="tabpanel" aria-labelledby="done-tab">
-
-        <!-- TODO LIST -->
-        <table class="table">
-          <thead>
-            <tr>
-              <th scope="col">Checked?</th>
-              <th scope="col">Description</th>
-              <th scope="col"></th>
-            </tr>
-          </thead>
-          <tbody>
-            <!-- LOOP OVER THE TODOS IN $scope.todos -->
-            <tr ng-repeat="todo in todos">
-              <td>
-                <input type="checkbox" ng-click="updateTodo(todo)" ng-model="todo.done" class='form-check-input'>
-              </td>
-              <td>
-                {{ todo.text }}
-              </td>
-              <td>
-                <button ng-click="deleteTodo(todo._id)" class='btn btn-danger'>Delete</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <todo-list done-filter='true' force-reload='forceReload2' todos-number='todosNumber'></todo-list>
       </div>
       <div class="tab-pane fade" id="not-done" role="tabpanel" aria-labelledby="not-done-tab">
-
-        <!-- TODO LIST -->
-        <table class="table">
-          <thead>
-            <tr>
-              <th scope="col">Checked?</th>
-              <th scope="col">Description</th>
-              <th scope="col"></th>
-            </tr>
-          </thead>
-          <tbody>
-            <!-- LOOP OVER THE TODOS IN $scope.todos -->
-            <tr ng-repeat="todo in todos">
-              <td>
-                <input type="checkbox" ng-click="updateTodo(todo)" ng-model="todo.done" class='form-check-input'>
-              </td>
-              <td>
-                {{ todo.text }}
-              </td>
-              <td>
-                <button ng-click="deleteTodo(todo._id)" class='btn btn-danger'>Delete</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <todo-list done-filter='false' force-reload='forceReload3' todos-number='todosNumber'></todo-list>
       </div>
     </div>
-
   </div>
 
 

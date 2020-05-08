@@ -1,83 +1,94 @@
 var nodeTodo = angular.module("nodeTodo", []);
 
-function mainController($scope, $http) {
+
+nodeTodo.component("todoList", {
+  templateUrl: "list.html",
+  bindings: {
+    doneFilter: '<',
+    forceReload: '<',
+    todosNumber: '='
+  },
+  controller: function ($scope, $http) {
+    var self = this
+    this.$onInit = function() {
+      self.doneFilter = $scope.$ctrl.doneFilter
+      self.todosNumber = $scope.$ctrl.todosNumber
+    }
+    this.$onChanges = function (changes) {
+      $scope.getTodos()
+    };
   $scope.formData = {};
 
-  $scope.cos = "";
-  $scope.doneFilter = ""
-
-
   $scope.getTodos = function() {
-    $http({url: "/api/todos", method: 'GET', params: { done: $scope.doneFilter }})
-      .success(function(data) {
-        $scope.todos = data;
-      })
-      .error(function(data) {
+    $http({url: "/api/todos", method: 'GET', params: { done: self.doneFilter }})
+      .then(function(resp) {
+        $scope.todos = resp.data;
+        self.todosNumber.number = $scope.todos.length
+        console.log(self.todosNumber.number )
+
+      }, function(data) {
         console.log("Error: " + data);
       });
-  };
-  // when landing on the page, get all todos and show them
-
-  $scope.getTodos()
-
-  $scope.getAllTodos = function() {
-    $scope.doneFilter = ""
-    $scope.cos = null
-    $scope.getTodos()
-  };
-
-  $scope.getDoneTodos = function() {
-    $scope.doneFilter = "true"
-    $scope.cos = 'done'
-    $scope.getTodos()
-  };
-
-  $scope.getNotDoneTodos = function() {
-    $scope.doneFilter = "false"
-    $scope.cos = 'not done'
-    $scope.getTodos()
-  };
-
-  // when submitting the add form, send the text to the node API
-  $scope.createTodo = function() {
-    $http
-      .post("/api/todos", $scope.formData)
-      .success(function(data) {
-        $("input").val("");
-        // $scope.todos = data;
-      })
-      .error(function(data) {
-        console.log("Error: " + data);
-      });
-      $scope.formData.text = null
-    $scope.getTodos()
   };
 
   // update a todo after checking it
-  $scope.updateTodo = function(todo) {
-    $http
-      .put("/api/todos/" + todo._id, { done: todo.done })
-      .success(function(data) {
-        $("input").val("");
-        // $scope.todos = data;
-      })
-      .error(function(data) {
+  $scope.checkTodo = function(todo) {
+      $http
+      .put("/api/todos/" + todo._id, { done: !todo.done })
+      .then(function(data) {
+        $scope.getTodos()
+
+      }, function(data) {
         console.log("Error: " + data);
       });
-    $scope.getTodos()
+  };
+
+  $scope.updateTodo = function(todo) {
+    $http
+      .put("/api/todos/" + todo._id, { text: todo.text })
+      .then(function(data) {
+        $scope.getTodos()
+
+      }, function(data) {
+        console.log("Error: " + data);
+      });
   };
 
   // delete a todo after checking it
   $scope.deleteTodo = function(id) {
     $http
       .delete("/api/todos/" + id)
-      .success(function(data) {
-        // $scope.todos = data;
-      })
-      .error(function(data) {
+      .then(function(data) {
+        $scope.getTodos()
+      }, function(data) {
         console.log("Error: " + data);
       });
-      $scope.getTodos()
-
   };
-}
+}});
+
+nodeTodo.controller('mainController', function mainController($scope, $http, $window) {
+  this.$onInit = function() {
+    $scope.tab = 'new'
+  }
+
+  $scope.formData = {};
+
+  $scope.cos = "";
+  $scope.todosNumber = { number: 0 }
+
+
+  // when submitting the add form, send the text to the node API
+  $scope.createTodo = function() {
+    $http
+      .post("/api/todos", $scope.formData)
+      .then(function(resp) {
+        $("input").val("");
+        $scope.formData.text = null
+        // $scope.todos = data;
+      }, function(data) {
+        console.log("Error: " + data);
+      });
+  };
+
+})
+
