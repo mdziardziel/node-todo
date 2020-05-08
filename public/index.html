@@ -52,16 +52,16 @@
 
     <ul class="nav nav-tabs" id="myTab" role="tablist">
       <li class="nav-item">
-        <a class="nav-link active" ng-click='tab = "new"' id="home-tab" data-toggle="tab" href="#new" role="tab" aria-controls="home" aria-selected="true">New</a>
+        <a class="nav-link active" ng-click='updateTab("new")' id="home-tab" data-toggle="tab" href="#new" role="tab" aria-controls="home" aria-selected="true">New</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" ng-click='forceReload1 = !forceReload1; tab = "all"' id="all-tab" data-toggle="tab" href="#all" role="tab" aria-controls="all" aria-selected="false">All</a>
+        <a class="nav-link" ng-click='updateTab("all")' id="all-tab" data-toggle="tab" href="#all" role="tab" aria-controls="all" aria-selected="false">All</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" ng-click='forceReload2 = !forceReload2; tab = "done"' id="done-tab" data-toggle="tab" href="#done" role="tab" aria-controls="done" aria-selected="false">Done</a>
+        <a class="nav-link" ng-click='updateTab("done")' id="done-tab" data-toggle="tab" href="#done" role="tab" aria-controls="done" aria-selected="false">Done</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" ng-click='forceReload3 = !forceReload3; tab = "not done"' id="not-done-tab" data-toggle="tab" href="#not-done" role="tab" aria-controls="not-done" aria-selected="false">Not Done</a>
+        <a class="nav-link" ng-click='updateTab("not done")' id="not-done-tab" data-toggle="tab" href="#not-done" role="tab" aria-controls="not-done" aria-selected="false">Not Done</a>
       </li>
     </ul>
     <div class="tab-content" id="myTabContent">

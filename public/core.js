@@ -24,7 +24,6 @@ nodeTodo.component("todoList", {
       .then(function(resp) {
         $scope.todos = resp.data;
         self.todosNumber.number = $scope.todos.length
-        console.log(self.todosNumber.number )
 
       }, function(data) {
         console.log("Error: " + data);
@@ -69,6 +68,9 @@ nodeTodo.component("todoList", {
 nodeTodo.controller('mainController', function mainController($scope, $http, $window) {
   this.$onInit = function() {
     $scope.tab = 'new'
+    $scope.forceReload1 = false
+    $scope.forceReload2 = false
+    $scope.forceReload3 = false
   }
 
   $scope.formData = {};
@@ -84,11 +86,22 @@ nodeTodo.controller('mainController', function mainController($scope, $http, $wi
       .then(function(resp) {
         $("input").val("");
         $scope.formData.text = null
-        // $scope.todos = data;
       }, function(data) {
         console.log("Error: " + data);
       });
   };
+
+  $scope.updateTab = function(tab) {
+    $scope.tab = tab
+
+    if(tab == 'new') {
+      $scope.forceReload1 =  !$scope.forceReload1;
+    }else if(tab == 'done'){
+      $scope.forceReload2 = !$scope.forceReload2;
+    }else if(tab == 'not done'){
+      $scope.forceReload3 =  !$scope.forceReload3;
+    }
+  }
 
 })
 

@@ -42,11 +42,9 @@ app.get("/api/todos", function(req, res) {
       done: req.query.done
     }
   }
-  // console.log(filter)
   Todo.find(filter, function(err, todos) {
     // if there is an error retrieving, send the error. nothing after res.send(err) will execute
     if (err) res.send(err);
-    // console.log(todos)
     res.json(todos); // return all todos in JSON format
   });
 });
@@ -69,7 +67,6 @@ app.get("/api/todos/:todo_id", function(req, res) {
 // create todo and send back all todos after creation
 app.post("/api/todos", function(req, res) {
   // create a todo, information comes from AJAX request from Angular
-  console.log(req.body)
   Todo.create(
     {
       text: req.body.text,
